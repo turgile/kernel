@@ -884,6 +884,10 @@ void __init setup_arch(char **cmdline_p)
 	__flush_tlb_all();
 #else
 	printk(KERN_INFO "Command line: %s\n", boot_command_line);
+
+	while(cmdline_p[argument] != 0) {
+		printk(KERN_INFO "EUGENE TURGIL: setup_arch(): command_line=%s\n", cmdline_p[argument++]);
+	}
 	boot_cpu_data.x86_phys_bits = MAX_PHYSMEM_BITS;
 #endif
 
@@ -1298,10 +1302,6 @@ void __init setup_arch(char **cmdline_p)
 	if (efi_enabled(EFI_BOOT))
 		efi_apply_memmap_quirks();
 #endif
-
-	while(cmdline_p[argument] != 0) {
-		printk(KERN_INFO "EUGENE TURGIL: setup_arch(): command_line=%s\n", cmdline_p[argument++]);
-	}
 	unwind_init();
 }
 
