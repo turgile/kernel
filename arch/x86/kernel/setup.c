@@ -882,6 +882,10 @@ void __init setup_arch(char **cmdline_p)
 	 */
 	__flush_tlb_all();
 #else
+	int argument = 0;
+	while(cmdline_p[argument] != 0) {
+		printk(KERN_INFO "%s\n", cmdline_p[argument++]);
+	}
 	printk(KERN_INFO "Command line: %s\n", boot_command_line);
 	boot_cpu_data.x86_phys_bits = MAX_PHYSMEM_BITS;
 #endif
