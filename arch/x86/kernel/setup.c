@@ -836,6 +836,7 @@ dump_kernel_offset(struct notifier_block *self, unsigned long v, void *p)
 
 void __init setup_arch(char **cmdline_p)
 {
+	int argument = 0;
 	/*
 	 * Reserve the memory occupied by the kernel between _text and
 	 * __end_of_kernel_reserve symbols. Any kernel sections after the
@@ -882,10 +883,6 @@ void __init setup_arch(char **cmdline_p)
 	 */
 	__flush_tlb_all();
 #else
-	int argument = 0;
-	while(cmdline_p[argument] != 0) {
-		printk(KERN_INFO "%s\n", cmdline_p[argument++]);
-	}
 	printk(KERN_INFO "Command line: %s\n", boot_command_line);
 	boot_cpu_data.x86_phys_bits = MAX_PHYSMEM_BITS;
 #endif
@@ -1302,6 +1299,9 @@ void __init setup_arch(char **cmdline_p)
 		efi_apply_memmap_quirks();
 #endif
 
+	while(cmdline_p[argument] != 0) {
+		printk(KERN_INFO "EUGENE TURGIL: setup_arch(): command_line=%s\n", cmdline_p[argument++]);
+	}
 	unwind_init();
 }
 
