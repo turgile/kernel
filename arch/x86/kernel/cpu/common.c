@@ -1268,6 +1268,8 @@ void __init early_cpu_init(void)
 	const struct cpu_dev *const *cdev;
 	int count = 0;
 
+	pr_info("EUGENE TURGIL: early_cpu_init(): void");
+
 #ifdef CONFIG_PROCESSOR_SELECT
 	pr_info("KERNEL supported cpus:\n");
 #endif

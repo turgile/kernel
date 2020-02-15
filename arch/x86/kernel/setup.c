@@ -731,6 +731,7 @@ static void __init trim_platform_memory_ranges(void)
 
 static void __init trim_bios_range(void)
 {
+	printk(KERN_INFO "EUGENE TURGIL: trim_bios_range: void");
 	/*
 	 * A special case is the first 4Kb of memory;
 	 * This is a BIOS owned area, not kernel ram, but generally
@@ -757,7 +758,9 @@ static void __init e820_add_kernel_range(void)
 {
 	u64 start = __pa_symbol(_text);
 	u64 size = __pa_symbol(_end) - start;
-
+	
+	printk(KERN_INFO "EUGENE TURGIL: e820_add_kernel_range(): void");
+	
 	/*
 	 * Complain if .text .data and .bss are not marked as E820_TYPE_RAM and
 	 * attempt to fix it by adding the range. We may have a confused BIOS,
@@ -778,6 +781,8 @@ static unsigned reserve_low = CONFIG_X86_RESERVE_LOW << 10;
 static int __init parse_reservelow(char *p)
 {
 	unsigned long long size;
+
+	printk(KERN_INFO "EUGENE TURGI: parse_reservelow(): p=%s\n", p);
 
 	if (!p)
 		return -EINVAL;
@@ -884,12 +889,10 @@ void __init setup_arch(char **cmdline_p)
 	__flush_tlb_all();
 #else
 	printk(KERN_INFO "Command line: %s\n", boot_command_line);
-
-	while(cmdline_p[argument] != 0) {
-		printk(KERN_INFO "EUGENE TURGIL: setup_arch(): command_line=%s\n", cmdline_p[argument++]);
-	}
 	boot_cpu_data.x86_phys_bits = MAX_PHYSMEM_BITS;
 #endif
+
+	printk(KERN_INFO "EUGENE TURGIL: setup_arch(): command_line=%s\n", *command_line);
 
 	/*
 	 * If we have OLPC OFW, we might end up relocating the fixmap due to
