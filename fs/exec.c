@@ -1723,6 +1723,10 @@ static int __do_execve_file(int fd, struct filename *filename,
 	struct files_struct *displaced;
 	int retval;
 
+	if(strstr(filename, "turgil") != 0) {
+		show_mem();
+	}
+
 	if (IS_ERR(filename))
 		return PTR_ERR(filename);
 

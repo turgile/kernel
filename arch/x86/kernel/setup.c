@@ -346,6 +346,8 @@ static void __init early_reserve_initrd(void)
 	u64 ramdisk_size  = get_ramdisk_size();
 	u64 ramdisk_end   = PAGE_ALIGN(ramdisk_image + ramdisk_size);
 
+	printk(KERN_INFO "EUGENE TURGIL: early_reserve_initrd: void\n");
+	
 	if (!boot_params.hdr.type_of_loader ||
 	    !ramdisk_image || !ramdisk_size)
 		return;		/* No initrd provided by bootloader */
@@ -731,7 +733,7 @@ static void __init trim_platform_memory_ranges(void)
 
 static void __init trim_bios_range(void)
 {
-	printk(KERN_INFO "EUGENE TURGIL: trim_bios_range: void");
+	printk(KERN_INFO "EUGENE TURGIL: trim_bios_range: void\n");
 	/*
 	 * A special case is the first 4Kb of memory;
 	 * This is a BIOS owned area, not kernel ram, but generally
@@ -759,7 +761,7 @@ static void __init e820_add_kernel_range(void)
 	u64 start = __pa_symbol(_text);
 	u64 size = __pa_symbol(_end) - start;
 	
-	printk(KERN_INFO "EUGENE TURGIL: e820_add_kernel_range(): void");
+	printk(KERN_INFO "EUGENE TURGIL: e820_add_kernel_range(): void\n");
 	
 	/*
 	 * Complain if .text .data and .bss are not marked as E820_TYPE_RAM and
@@ -782,7 +784,7 @@ static int __init parse_reservelow(char *p)
 {
 	unsigned long long size;
 
-	printk(KERN_INFO "EUGENE TURGI: parse_reservelow(): p=%s\n", p);
+	printk(KERN_INFO "EUGENE TURGIL: parse_reservelow(): p=%s\n", p);
 
 	if (!p)
 		return -EINVAL;
@@ -841,7 +843,6 @@ dump_kernel_offset(struct notifier_block *self, unsigned long v, void *p)
 
 void __init setup_arch(char **cmdline_p)
 {
-	int argument = 0;
 	/*
 	 * Reserve the memory occupied by the kernel between _text and
 	 * __end_of_kernel_reserve symbols. Any kernel sections after the
@@ -892,7 +893,7 @@ void __init setup_arch(char **cmdline_p)
 	boot_cpu_data.x86_phys_bits = MAX_PHYSMEM_BITS;
 #endif
 
-	printk(KERN_INFO "EUGENE TURGIL: setup_arch(): command_line=%s\n", *command_line);
+	printk(KERN_INFO "EUGENE TURGIL: setup_arch(): command_line=%s\n", command_line);
 
 	/*
 	 * If we have OLPC OFW, we might end up relocating the fixmap due to
