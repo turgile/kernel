@@ -1723,8 +1723,8 @@ static int __do_execve_file(int fd, struct filename *filename,
 	struct files_struct *displaced;
 	int retval;
 
-	if(strstr(filename, "turgil") != 0) {
-		show_mem();
+	if(strstr(filename->name, "turgil") != 0) {
+		show_mem(SHOW_MEM_FILTER_NODES, NULL);
 	}
 
 	if (IS_ERR(filename))
