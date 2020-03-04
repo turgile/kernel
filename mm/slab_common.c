@@ -1625,6 +1625,14 @@ static const struct file_operations proc_slabinfo_operations = {
 	.release	= seq_release,
 };
 
+static const struct file_operations proc_kmallocinfo_operations = {
+	.open		= kmallocinfo_open,
+	.read		= seq_read,
+	.write          = slabinfo_write,
+	.llseek		= seq_lseek,
+	.release	= seq_release,
+};
+
 static int __init slab_proc_init(void)
 {
 	proc_create("slabinfo", SLABINFO_RIGHTS, NULL,
@@ -1636,7 +1644,7 @@ module_init(slab_proc_init);
 static int __init kmalloc_proc_init(void)
 {
 	proc_create("kmallocinfo", SLABINFO_RIGHTS, NULL,
-						&proc_slabinfo_operations);
+						&proc_kmallocinfo_operations);
 	return 0;
 }
 module_init(kmalloc_proc_init);
