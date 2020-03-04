@@ -1470,6 +1470,29 @@ static void cache_show(struct kmem_cache *s, struct seq_file *m)
 	seq_putc(m, '\n');
 }
 
+static void kcache_show(struct kmem_cache *s, struct seq_file *m)
+{
+	struct slabinfo sinfo;
+
+	memset(&sinfo, 0, sizeof(sinfo));
+	get_slabinfo(s, &sinfo);
+
+	memcg_accumulate_slabinfo(s, &sinfo);
+
+	if(!memcmp(cache_name(s), "kmalloc", 7)) {
+		seq_printf(m, "%-17s %6lu %6lu %6u %4u %4d",
+			cache_name(s), sinfo.active_objs, sinfo.num_objs, s->size,
+			sinfo.objects_per_slab, (1 << sinfo.cache_order));
+
+		seq_printf(m, " : tunables %4u %4u %4u",
+			sinfo.limit, sinfo.batchcount, sinfo.shared);
+		seq_printf(m, " : slabdata %6lu %6lu %6lu",
+			sinfo.active_slabs, sinfo.num_slabs, sinfo.shared_avail);
+		slabinfo_show_stats(m, s);
+		seq_putc(m, '\n');
+	}
+}
+
 static int slab_show(struct seq_file *m, void *p)
 {
 	struct kmem_cache *s = list_entry(p, struct kmem_cache, root_caches_node);
@@ -1477,6 +1500,15 @@ static int slab_show(struct seq_file *m, void *p)
 	if (p == slab_root_caches.next)
 		print_slabinfo_header(m);
 	cache_show(s, m);
+	return 0;
+}
+static int kmalloc_show(struct seq_file *m, void *p)
+{
+	struct kmem_cache *s = list_entry(p, struct kmem_cache, root_caches_node);
+
+	if (p == slab_root_caches.next)
+		print_slabinfo_header(m);
+	kcache_show(s, m);
 	return 0;
 }
 
@@ -1568,9 +1600,21 @@ static const struct seq_operations slabinfo_op = {
 	.show = slab_show,
 };
 
+static const struct seq_operations kmallocinfo_op = {
+	.start = slab_start,
+	.next = slab_next,
+	.stop = slab_stop,
+	.show = kmalloc_show,
+};
+
 static int slabinfo_open(struct inode *inode, struct file *file)
 {
 	return seq_open(file, &slabinfo_op);
+}
+
+static int kmallocinfo_open(struct inode *inode, struct file *file)
+{
+	return seq_open(file, &kmallocinfo_op);
 }
 
 static const struct file_operations proc_slabinfo_operations = {
@@ -1588,6 +1632,14 @@ static int __init slab_proc_init(void)
 	return 0;
 }
 module_init(slab_proc_init);
+
+static int __init kmalloc_proc_init(void)
+{
+	proc_create("kmallocinfo", SLABINFO_RIGHTS, NULL,
+						&proc_slabinfo_operations);
+	return 0;
+}
+module_init(kmalloc_proc_init);
 
 #if defined(CONFIG_DEBUG_FS) && defined(CONFIG_MEMCG_KMEM)
 /*
