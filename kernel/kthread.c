@@ -565,8 +565,13 @@ int kthread_stop(struct task_struct *k)
 }
 EXPORT_SYMBOL(kthread_stop);
 
+int turgil_hotplug(void *unused) {
+	
+}
+
 int kthreadd(void *unused)
 {
+	int pid;
 	struct task_struct *tsk = current;
 
 	/* Setup a clean context for our children to inherit. */
@@ -577,6 +582,18 @@ int kthreadd(void *unused)
 
 	current->flags |= PF_NOFREEZE;
 	cgroup_init_kthreadd();
+
+	// Start up our custom CS680 threads
+	pid = kernel_thread(turgil_hotplug, NULL, CLONE_FS);
+	if(pid < 0) {
+		pr_err("Unable to start first thread.\n");
+	}
+
+	pid = kernel_thread(turgil_hotplug, NULL, CLONE_FS);
+	if(pid < 0) {
+		pr_err("Unable to start second thread.\n");
+	}
+	
 
 	for (;;) {
 		set_current_state(TASK_INTERRUPTIBLE);
