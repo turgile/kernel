@@ -565,8 +565,22 @@ int kthread_stop(struct task_struct *k)
 }
 EXPORT_SYMBOL(kthread_stop);
 
-int turgil_hotplug(void *unused) {
-	
+static void turgil_hotplug1(void){
+  struct task_struct *curtask = current;
+  strcpy(curtask->comm, "Eugene Turgil: turgil_hotplug1");
+  set_task_state(curtask, TASK_RUNNING);
+  printk(KERN_NOTICE "Eugene Turgil: turgil_hotplug1 is about to be scheduled.\n");
+  schedule();
+  printk(KERN_NOTICE "Eugene Turgil: turgil_hotplug1 is now scheduled.\n");
+}
+
+static void turgil_hotplug2(void){
+  struct task_struct *curtask = current;
+  strcpy(curtask->comm, "Eugene Turgil: turgil_hotplug2");
+  set_task_state(curtask, TASK_RUNNING);
+  printk(KERN_NOTICE "Eugene Turgil: turgil_hotplug2 is about to be scheduled.\n");
+  schedule();
+  printk(KERN_NOTICE "Eugene Turgil: turgil_hotplug2 is now scheduled.\n");
 }
 
 int kthreadd(void *unused)
@@ -584,12 +598,12 @@ int kthreadd(void *unused)
 	cgroup_init_kthreadd();
 
 	// Start up our custom CS680 threads
-	pid = kernel_thread(turgil_hotplug, NULL, CLONE_FS);
+	pid = kernel_thread(turgil_hotplug1, NULL, CLONE_FS | CLONE_KERNEL);
 	if(pid < 0) {
 		pr_err("Unable to start first thread.\n");
 	}
 
-	pid = kernel_thread(turgil_hotplug, NULL, CLONE_FS);
+	pid = kernel_thread(turgil_hotplug2, NULL, CLONE_FS | CLONE_KERNEL);
 	if(pid < 0) {
 		pr_err("Unable to start second thread.\n");
 	}
