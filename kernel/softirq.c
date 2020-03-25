@@ -675,9 +675,14 @@ DEFINE_PER_CPU(struct task_struct *, turgild);
 static void run_kturgild(unsigned int cpu) {
 	printk(KERN_INFO "CS 680: SMP kturgild running on cpu %d\n", cpu);
 }
+static int kturgild_should_run(unsigned int cpu) {
+	printk(KERN_INFO "CS 680: kturgild_should_run CPU: %d\n",cpu);
+	return 0;
+}
 
 static struct smp_hotplug_thread turgil_hotplug_threads = {
 	.store			= &turgild,
+	.thread_should_run	= kturgild_should_run,
 	.thread_fn		= run_kturgild,
 	.thread_comm		= "kturgild/%u",
 };
