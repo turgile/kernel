@@ -572,7 +572,6 @@ static int turgil_hotplug1(void *unused) {
   printk(KERN_NOTICE "Eugene Turgil: turgil_hotplug1 is about to be scheduled.\n");
   schedule();
   printk(KERN_NOTICE "Eugene Turgil: turgil_hotplug1 is now scheduled.\n");
-  return 0;
 }
 
 static int turgil_hotplug2(void *unused) {
@@ -582,7 +581,6 @@ static int turgil_hotplug2(void *unused) {
   printk(KERN_NOTICE "Eugene Turgil: turgil_hotplug2 is about to be scheduled.\n");
   schedule();
   printk(KERN_NOTICE "Eugene Turgil: turgil_hotplug2 is now scheduled.\n");
-  return 0;
 }
 
 int kthreadd(void *unused)
