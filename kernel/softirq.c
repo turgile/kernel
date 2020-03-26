@@ -670,20 +670,21 @@ static int takeover_tasklets(unsigned int cpu)
 #define takeover_tasklets	NULL
 #endif /* CONFIG_HOTPLUG_CPU */
 
-struct task_struct *turgil_struct;
+DEFINE_PER_CPU(struct task_struct *, turgild);
 
 static void run_kturgild(unsigned int cpu) {
 	printk(KERN_INFO "CS 680: SMP kturgild running on cpu %d\n", cpu);
 }
 
 static struct smp_hotplug_thread turgil_hotplug_threads = {
-	.store			= &turgil_struct,
+	.store			= &turgild,
 	.thread_fn		= run_kturgild,
 	.thread_comm		= "kturgild/%u",
 };
 
 static int spawn_kturgild(void)
 {
+	cpuhp_setup_state_nocalls(CPUHP_TURGILD_DEAD, "turgild:dead", NULL, NULL);
 	BUG_ON(smpboot_register_percpu_thread(&turgil_hotplug_threads));
 	return 0;
 }
