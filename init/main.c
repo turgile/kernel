@@ -444,7 +444,7 @@ noinline void __ref rest_init(void)
 
 	tsk = current;
 	for_each_process(tsk) {
-		printk(KERN_INFO "PROCESS\n");
+		printk(KERN_INFO "CS 680: main: PROCESS NAME: %s\n", tsk->comm);
 	}
 	/*
 	 * The boot idle thread must execute schedule()
