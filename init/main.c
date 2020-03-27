@@ -442,6 +442,10 @@ noinline void __ref rest_init(void)
 
 	complete(&kthreadd_done);
 
+	tsk = current;
+	for_each_process(tsk) {
+		printk(KERN_INFO "PROCESS\n");
+	}
 	/*
 	 * The boot idle thread must execute schedule()
 	 * at least once to get things moving:
@@ -449,11 +453,6 @@ noinline void __ref rest_init(void)
 	schedule_preempt_disabled();
 	/* Call into cpu_idle with preempt disabled */
 	cpu_startup_entry(CPUHP_ONLINE);
-
-	tsk = current;
-	for_each_process(tsk) {
-		printk(KERN_INFO "PROCESS\n");
-	}
 }
 
 /* Check for early params. */
