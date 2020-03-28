@@ -441,10 +441,6 @@ noinline void __ref rest_init(void)
 	system_state = SYSTEM_SCHEDULING;
 
 	complete(&kthreadd_done);
-
-	tsk = current;
-	for_each_process(tsk) {
-		printk(KERN_INFO "CS 680: main: PROCESS NAME: %s\n", tsk->comm);
 	}
 	/*
 	 * The boot idle thread must execute schedule()
@@ -1143,6 +1139,12 @@ static int __ref kernel_init(void *unused)
 	 * The Bourne shell can be used instead of init if we are
 	 * trying to recover a really broken machine.
 	 */
+
+	tsk = current;
+	for_each_process(tsk) {
+		printk(KERN_INFO "CS 680: main: PROCESS NAME: %s\n", tsk->comm);
+	}
+
 	if (execute_command) {
 		ret = run_init_process(execute_command);
 		if (!ret)
