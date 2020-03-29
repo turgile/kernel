@@ -135,18 +135,20 @@ static int show_turgild(struct seq_file *seq, void *v)
 	} else {
 #ifdef CONFIG_SMP
 		struct task_struct *tsk;
-#endif
+		rcu_read_lock();
+		
+		seq_printf(seq, "Process Name\tPID\n");		
+
 		tsk = current;
 		for_each_process(tsk) {
-			seq_printf(seq, "%s\n", tsk != NULL ? tsk->comm : "NULL");
+			seq_printf(seq, "%d\t%s\n", 
+				tsk != NULL ? tsk->comm : "NULL",
+				tsk->pid);
 		}
 
-		seq_printf(seq, "\n");
-
-#ifdef CONFIG_SMP
-		rcu_read_lock();
 		rcu_read_unlock();
 #endif
+		seq_printf(seq, "\n");
 	}
 	return 0;
 }
