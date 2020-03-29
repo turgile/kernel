@@ -644,6 +644,9 @@ struct task_struct {
 	unsigned int			flags;
 	unsigned int			ptrace;
 
+	/* flag that checks if turgil daemon has run */
+	int	 			has_turgild_run;
+
 #ifdef CONFIG_SMP
 	struct llist_node		wake_entry;
 	int				on_cpu;
