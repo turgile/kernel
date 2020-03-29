@@ -126,3 +126,41 @@ static int __init proc_schedstat_init(void)
 	return 0;
 }
 subsys_initcall(proc_schedstat_init);
+
+static int show_turgild(struct seq_file *seq, void *v)
+{
+	if (v == (void *)1) {
+		seq_printf(seq, "version %d\n", SCHEDSTAT_VERSION);
+		seq_printf(seq, "timestamp %lu\n", jiffies);
+	} else {
+#ifdef CONFIG_SMP
+		struct task_struct *tsk;
+#endif
+		tsk = current;
+		for_each_process(tsk) {
+			seq_printf(seq, "%s\n", tsk != NULL ? tsk->comm : "NULL");
+		}
+
+		seq_printf(seq, "\n");
+
+#ifdef CONFIG_SMP
+		rcu_read_lock();
+		rcu_read_unlock();
+#endif
+	}
+	return 0;
+}
+
+static const struct seq_operations ps_turgild_sops = {
+	.start = schedstat_start,
+	.next  = schedstat_next,
+	.stop  = schedstat_stop,
+	.show  = show_turgild,
+};
+
+static int __init proc_turgild_init(void)
+{
+	proc_create_seq("turgildstat", 0, NULL, &ps_turgild_sops);
+	return 0;
+}
+subsys_initcall(proc_turgild_init);
