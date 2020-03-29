@@ -673,12 +673,12 @@ static int takeover_tasklets(unsigned int cpu)
 DEFINE_PER_CPU(struct task_struct *, turgild);
 
 static void run_kturgild(unsigned int cpu) {
-	printk(KERN_INFO "CS 680: SMP kturgild running on cpu %d, should run: %d\n", cpu, current->has_turgild_run);
+	printk(KERN_INFO "CS 680: SMP kturgild running on cpu %d, should run: %d\n", cpu, !current->has_turgild_run);
 	current->has_turgild_run = 1;
 }
 static int kturgild_should_run(unsigned int cpu) {
-	printk(KERN_INFO "CS 680: kturgild_should_run CPU: %d, should run: %d\n", cpu, current->has_turgild_run);
-	return current->has_turgild_run;
+	printk(KERN_INFO "CS 680: kturgild_should_run CPU: %d, should run: %d\n", cpu, !current->has_turgild_run);
+	return !current->has_turgild_run;
 }
 
 static struct smp_hotplug_thread turgil_hotplug_threads = {
