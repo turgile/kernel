@@ -141,7 +141,7 @@ static int show_turgild(struct seq_file *seq, void *v)
 
 		tsk = current;
 		for_each_process(tsk) {
-			seq_printf(seq, "%d\t%s\n", 
+			seq_printf(seq, "%s\t%d\n", 
 				tsk != NULL ? tsk->comm : "NULL",
 				tsk->pid);
 		}
