@@ -3380,9 +3380,19 @@ context_switch(struct rq *rq, struct task_struct *prev,
 
 	prepare_lock_switch(rq, next, rf);
 
+	if(current->context_switch_counter < 100) {
+		printk(KERN_INFO "CS 680: context_switch: COMM: [%s] PID: [%d], CLOCK: [%llu], COUNTER: [%d]\n",
+	                current->comm, current->pid, get_jiffies_64(), ++(current->context_switch_counter));
+	}
+
 	/* Here we just switch the register state and the stack. */
 	switch_to(prev, next, prev);
 	barrier();
+
+	if(current->context_switch_counter < 100) {
+		printk(KERN_INFO "CS 680: context_switch: COMM: [%s] PID: [%d], CLOCK: [%llu], COUNTER: [%d]\n",
+	                current->comm, current->pid, get_jiffies_64(), ++(current->context_switch_counter));
+	}
 
 	return finish_task_switch(prev);
 }

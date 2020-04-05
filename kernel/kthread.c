@@ -274,6 +274,10 @@ static void create_kthread(struct kthread_create_info *create)
 #ifdef CONFIG_NUMA
 	current->pref_node_fork = create->node;
 #endif
+
+	printk(KERN_INFO "CS 680: create_kthread: COMM: [%s] PID: [%d], CLOCK: [%llu]\n", 
+		current->comm, current->pid, get_jiffies_64());
+
 	/* We want our own signal handler (we take no signals by default). */
 	pid = kernel_thread(kthread, create, CLONE_FS | CLONE_FILES | SIGCHLD);
 	if (pid < 0) {
@@ -473,6 +477,9 @@ void kthread_unpark(struct task_struct *k)
 {
 	struct kthread *kthread = to_kthread(k);
 
+	printk(KERN_INFO "CS 680: kthread_unpark: COMM: [%s] PID: [%d], CLOCK: [%llu]\n", 
+		current->comm, current->pid, get_jiffies_64());
+	
 	/*
 	 * Newly created kthread was parked when the CPU was offline.
 	 * The binding was lost and we need to set it again.
@@ -504,6 +511,9 @@ int kthread_park(struct task_struct *k)
 {
 	struct kthread *kthread = to_kthread(k);
 
+	printk(KERN_INFO "CS 680: kthread_park: COMM: [%s] PID: [%d], CLOCK: [%llu]\n", 
+		current->comm, current->pid, get_jiffies_64());
+	
 	if (WARN_ON(k->flags & PF_EXITING))
 		return -ENOSYS;
 
@@ -549,6 +559,9 @@ int kthread_stop(struct task_struct *k)
 	struct kthread *kthread;
 	int ret;
 
+	printk(KERN_INFO "CS 680: kthread_stop: COMM: [%s] PID: [%d], CLOCK: [%llu]\n", 
+		current->comm, current->pid, get_jiffies_64());
+	
 	trace_sched_kthread_stop(k);
 
 	get_task_struct(k);
@@ -598,16 +611,6 @@ int kthreadd(void *unused)
 	cgroup_init_kthreadd();
 
 	// Start up our custom CS680 threads
-	pid = kernel_thread(turgil_hotplug1, NULL, CLONE_FS);
-	if(pid < 0) {
-		pr_err("Unable to start first thread.\n");
-	}
-
-	pid = kernel_thread(turgil_hotplug2, NULL, CLONE_FS);
-	if(pid < 0) {
-		pr_err("Unable to start second thread.\n");
-	}
-	
 
 	for (;;) {
 		set_current_state(TASK_INTERRUPTIBLE);
