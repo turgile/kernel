@@ -592,6 +592,8 @@ asmlinkage void do_divide_error(unsigned long r4)
 {
 	int code;
 
+	printk(KERN_INFO "CS 680: do_divide_error: PID: %d\n", current->pid);
+
 	switch (r4) {
 	case TRAP_DIVZERO_ERROR:
 		code = FPE_INTDIV;
@@ -608,9 +610,10 @@ asmlinkage void do_divide_error(unsigned long r4)
 #endif
 
 #ifdef CONFIG_CPU_SH2A
-asmlinkage void do_turgil_error(unsigned long r4)
+asmlinkage void do_turgil_error()
 {
 	printk(KERN_INFO "CS: 680: do_turgil_error: recieved error from pid %d", current->pid); 
+	return;
 }
 #endif
 
