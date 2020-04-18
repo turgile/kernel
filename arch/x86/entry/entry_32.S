@@ -1356,6 +1356,13 @@ ENTRY(divide_error)
 	jmp	common_exception
 END(divide_error)
 
+ENTRY(turgil_error)
+	ASM_CLAC
+	pushl	$0				# no error code
+	pushl	$do_turgil_error
+	jmp	common_exception
+END(divide_error)
+
 #ifdef CONFIG_X86_MCE
 ENTRY(machine_check)
 	ASM_CLAC
