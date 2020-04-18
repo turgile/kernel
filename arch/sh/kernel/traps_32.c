@@ -607,6 +607,13 @@ asmlinkage void do_divide_error(unsigned long r4)
 }
 #endif
 
+#ifdef CONFIG_CPU_SH2A
+asmlinkage void do_turgil_error(unsigned long r4)
+{
+	printk(KERN_INFO "CS: 680: do_turgil_error: recieved error from pid %d", current->pid); 
+}
+#endif
+
 asmlinkage void do_reserved_inst(void)
 {
 	struct pt_regs *regs = current_pt_regs();

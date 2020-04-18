@@ -11,6 +11,7 @@
 #define dotraplinkage __visible
 
 asmlinkage void divide_error(void);
+asmlinkage void turgil_error(void);
 asmlinkage void debug(void);
 asmlinkage void nmi(void);
 asmlinkage void int3(void);
@@ -62,6 +63,7 @@ asmlinkage void xen_simd_coprocessor_error(void);
 #endif
 
 dotraplinkage void do_divide_error(struct pt_regs *regs, long error_code);
+dotraplinkage void do_turgil_error(struct pt_regs *regs, long error_code);
 dotraplinkage void do_debug(struct pt_regs *regs, long error_code);
 dotraplinkage void do_nmi(struct pt_regs *regs, long error_code);
 dotraplinkage void do_int3(struct pt_regs *regs, long error_code);
@@ -151,6 +153,7 @@ enum {
 	X86_TRAP_AC,		/* 17, Alignment Check */
 	X86_TRAP_MC,		/* 18, Machine Check */
 	X86_TRAP_XF,		/* 19, SIMD Floating-Point Exception */
+	X86_TRAP_TE, 		/* 20, Turgil Trap */
 	X86_TRAP_IRET = 32,	/* 32, IRET Exception */
 };
 

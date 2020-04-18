@@ -57,7 +57,7 @@ typedef unsigned long sigset_t;
 #define SIGPWR		30
 #define SIGSYS		31
 #define	SIGUNUSED	31
-
+#define SIGTURGIL 	33
 /* These should not be considered constants from userland.  */
 #define SIGRTMIN	32
 #define SIGRTMAX	_NSIG

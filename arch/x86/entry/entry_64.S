@@ -1023,6 +1023,7 @@ END(\sym)
 .endm
 
 idtentry divide_error			do_divide_error			has_error_code=0
+idtentry turgil_error			do_turgil_error			has_error_code=0
 idtentry overflow			do_overflow			has_error_code=0
 idtentry bounds				do_bounds			has_error_code=0
 idtentry invalid_op			do_invalid_op			has_error_code=0
