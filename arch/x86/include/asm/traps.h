@@ -11,7 +11,6 @@
 #define dotraplinkage __visible
 
 asmlinkage void divide_error(void);
-asmlinkage void turgil_error(void);
 asmlinkage void debug(void);
 asmlinkage void nmi(void);
 asmlinkage void int3(void);
@@ -21,6 +20,7 @@ asmlinkage void invalid_op(void);
 asmlinkage void device_not_available(void);
 #ifdef CONFIG_X86_64
 asmlinkage void double_fault(void);
+asmlinkage void turgil_error(void);
 #endif
 asmlinkage void coprocessor_segment_overrun(void);
 asmlinkage void invalid_TSS(void);
@@ -63,7 +63,6 @@ asmlinkage void xen_simd_coprocessor_error(void);
 #endif
 
 dotraplinkage void do_divide_error(struct pt_regs *regs, long error_code);
-dotraplinkage void do_turgil_error(struct pt_regs *regs, long error_code);
 dotraplinkage void do_debug(struct pt_regs *regs, long error_code);
 dotraplinkage void do_nmi(struct pt_regs *regs, long error_code);
 dotraplinkage void do_int3(struct pt_regs *regs, long error_code);
@@ -77,6 +76,7 @@ dotraplinkage void do_segment_not_present(struct pt_regs *regs, long error_code)
 dotraplinkage void do_stack_segment(struct pt_regs *regs, long error_code);
 #ifdef CONFIG_X86_64
 dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code, unsigned long address);
+dotraplinkage void do_turgil_error(struct pt_regs *regs, long error_code);
 asmlinkage __visible notrace struct pt_regs *sync_regs(struct pt_regs *eregs);
 asmlinkage __visible notrace
 struct bad_iret_stack *fixup_bad_iret(struct bad_iret_stack *s);
