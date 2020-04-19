@@ -1618,6 +1618,8 @@ EXPORT_SYMBOL(send_sig);
 void force_sig(int sig)
 {
 	struct kernel_siginfo info;
+	
+	printk(KERN_INFO "CS 680: force_sig: trace signal %d\n", sig);
 
 	clear_siginfo(&info);
 	info.si_signo = sig;
