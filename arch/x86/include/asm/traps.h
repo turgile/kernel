@@ -8,6 +8,8 @@
 #include <asm/debugreg.h>
 #include <asm/siginfo.h>			/* TRAP_TRACE, ... */
 
+
+
 #define dotraplinkage __visible
 
 asmlinkage void divide_error(void);
@@ -61,6 +63,7 @@ asmlinkage void xen_machine_check(void);
 asmlinkage void xen_simd_coprocessor_error(void);
 #endif
 
+dotraplinkage void do_turgil_interrupt(struct pt_regs *regs, long error_code);
 dotraplinkage void do_divide_error(struct pt_regs *regs, long error_code);
 dotraplinkage void do_debug(struct pt_regs *regs, long error_code);
 dotraplinkage void do_nmi(struct pt_regs *regs, long error_code);

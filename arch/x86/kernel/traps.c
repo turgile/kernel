@@ -260,6 +260,10 @@ do_trap(int trapnr, int signr, char *str, struct pt_regs *regs,
 }
 NOKPROBE_SYMBOL(do_trap);
 
+dotraplinkage void do_turgil_interrupt(struct pt_regs *regs, long error_code) {
+	printk(KERN_INFO "CS 680: do_turgil_interrupt: error_code: %d\n", error_code);
+}
+
 static void do_error_trap(struct pt_regs *regs, long error_code, char *str,
 	unsigned long trapnr, int signr, int sicode, void __user *addr)
 {

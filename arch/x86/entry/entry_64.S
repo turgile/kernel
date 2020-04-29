@@ -868,7 +868,7 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work_interrupt		smp_irq_work_interrupt
 
 .macro idtentry_part do_sym, has_error_code:req, read_cr2:req, paranoid:req, shift_ist=-1, ist_offset=0
 
-	.if \paranoid
+	.if \paranoid != 0 && \paranoid != 2020
 	call	paranoid_entry
 	/* returned flag: ebx=0: need swapgs on exit, ebx=1: don't need it */
 	.else
@@ -915,13 +915,41 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work_interrupt		smp_irq_work_interrupt
 	movq	%r12, %rdx			/* Move CR2 into 3rd argument */
 	.endif
 
+	.if \paranoid == 2020
+
+	pushf                                  // save flags
+        // save registers
+	pushq %rax
+	pushq %rbx
+	pushq %rcx
+	pushq %rdx
+	pushq %rsp
+	pushq %rbp
+	pushq %rsi
+	pushq %rdi
+
+	call     do_turgil_interrupt
+	
+	// restore register
+       	popq %rdi                                  
+       	popq %rsi                                  
+       	popq %rbp                                  
+       	popq %rsp                                  
+       	popq %rdx                                  
+       	popq %rcx                                  
+       	popq %rbx                                  
+       	popq %rax                                  
+       	popf                                   // restore flags
+
+	.endif
+
 	call	\do_sym
 
 	.if \shift_ist != -1
 	addq	$\ist_offset, CPU_TSS_IST(\shift_ist)
 	.endif
 
-	.if \paranoid
+	.if \paranoid != 0 && \paranoid != 2020
 	/* this procedure expect "no swapgs" flag in ebx */
 	jmp	paranoid_exit
 	.else
@@ -1022,7 +1050,7 @@ _ASM_NOKPROBE(\sym)
 END(\sym)
 .endm
 
-idtentry divide_error			do_divide_error			has_error_code=0
+idtentry divide_error			do_divide_error			has_error_code=0 paranoid=2020
 idtentry overflow			do_overflow			has_error_code=0
 idtentry bounds				do_bounds			has_error_code=0
 idtentry invalid_op			do_invalid_op			has_error_code=0
@@ -1189,7 +1217,7 @@ apicinterrupt3 HYPERVISOR_CALLBACK_VECTOR \
 	acrn_hv_callback_vector acrn_hv_vector_handler
 #endif
 
-idtentry debug			do_debug		has_error_code=0	paranoid=1 shift_ist=IST_INDEX_DB ist_offset=DB_STACK_OFFSET
+idtentry debug			do_debug		has_error_code=0	paranoid=1 shift_ist=IST_INDEX_DB ist_offset=DB_STACK_OFFSET 
 idtentry int3			do_int3			has_error_code=0	create_gap=1
 idtentry stack_segment		do_stack_segment	has_error_code=1
 

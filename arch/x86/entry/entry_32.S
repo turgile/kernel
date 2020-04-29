@@ -1351,6 +1351,12 @@ END(alignment_check)
 
 ENTRY(divide_error)
 	ASM_CLAC
+	pushfq					# save flags
+	pushaq					# save registers
+	call	$do_turgil_interrupt
+	popaq					# restore register
+	popfq					# restore flags
+	ASM_CLAC
 	pushl	$0				# no error code
 	pushl	$do_divide_error
 	jmp	common_exception
